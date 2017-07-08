@@ -46,7 +46,10 @@ function maketoken(){
  * @param type $arr 数组
  * @param type $key_name  列名
  * @param type $type  返回格式： arr 返回数组格式，str 返回以逗号分割的字符串
+<<<<<<< HEAD
  * @param type $filter  1 为过滤重复键，0为不过滤
+=======
+>>>>>>> 75bcb38a70cefe742463292f9d583ef839696979
  * @return type  返回那一列的数组
 例子：
 $arr0 = [
@@ -69,6 +72,7 @@ string(7) "456,754"//拼接成字符串一般用于拼接成查询条件如： i
 
  */
 function get_arr_column($arr, $key_name, $type='arr', $filter=1)
+
 {
     $arr2 = array();
     foreach($arr as $key => $val){
@@ -767,10 +771,13 @@ function showFalseJson($msg, $code = -1)
     header('Content-Type:application/json; charset=utf-8');
     exit(json_encode($result));
 }
+<<<<<<< HEAD
 /*ajax简单返回json格式*/
 function reutrn_json($data)
 {
     header('Content-Type:application/json; charset=utf-8');
     exit(json_encode($data));
 }
+=======
+>>>>>>> 75bcb38a70cefe742463292f9d583ef839696979
 ?>
