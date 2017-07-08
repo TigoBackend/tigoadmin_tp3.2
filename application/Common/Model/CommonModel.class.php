@@ -64,6 +64,10 @@ class CommonModel extends Model {
     protected function _before_write(&$data) {
         
     }
+    // 查询成功后的回调方法
+    protected function _after_select(&$resultSet,$options) {
+        
+    }    
 
 }
 

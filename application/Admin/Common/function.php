@@ -39,5 +39,16 @@ function sp_get_url_route(){
 	return $routes;
 }
 
-
+function get_region($region,$where=array())
+{
+	if ($region == "province") {
+		$where['level'] = 1;
+	}elseif ($region == "city") {
+		$where['level'] = 2;
+	}elseif ($region == "district") {
+		$where['level'] = 3;
+	}
+	$data = M('region')->where($where)->getfield("id,name");
+	return $data;
+}
 

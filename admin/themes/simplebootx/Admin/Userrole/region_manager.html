@@ -1,0 +1,202 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Userrole/region_manager')}">区域经理列表</a></li>
+			<li><a href="{:U('Userrole/edit_region_manager')}">新增区域经理</a></li>
+		</ul>
+		<form class="well form-search" method="post" action="{:U('Userrole/region_manager')}">
+			创建日期
+			<input type="text" name="start_time" class="js-date" value="{$formget.start_time}" style="width: 80px;" autocomplete="off">-
+			<input autocomplete="off" type="text" class="js-date" name="end_time" value="{$formget.end_time}" style="width: 80px;"> 姓名搜索
+			<input type="text" name="keyword" style="width: 200px;" value="{$formget.keyword}" placeholder="输入姓名">
+
+			<label class="control-label">所属区域</label>
+
+			<tr>
+				<td>
+					<select name="province"  style="width: 100px" id="province" value="{$formget.province}">
+						<option value="0">请选择</option>
+						<foreach name="province" item="vo">
+							<php>if($formget['province'] == $key){</php>
+							<option value="{$key}" selected="selected">{$vo}</option>
+							<php>}else{</php>
+							<option value="{$key}">{$vo}</option>
+							<php>}</php>
+						</foreach>
+					</select>
+					<select name="city"  style="width: 100px" id="city" value="{$formget.city}">
+						<option value="0">请选择</option>
+						<foreach name="city" item="vo">
+							<php>if($formget['city'] == $key){</php>
+							<option value="{$key}" selected="selected">{$vo}</option>
+							<php>}else{</php>
+							<option value="{$key}">{$vo}</option>
+							<php>}</php>
+						</foreach>
+					</select>
+					<select name="district"  style="width: 100px" id="district" value="{$formget.district}">
+						<option value="0">请选择</option>
+						<foreach name="district" item="vo">
+							<php>if($formget['district'] == $key){</php>
+							<option value="{$key}" selected="selected">{$vo}</option>
+							<php>}else{</php>
+							<option value="{$key}">{$vo}</option>
+							<php>}</php>
+						</foreach>
+					</select>
+
+					<span class="form-required"></span>
+				</td>
+			</tr>
+			<br>
+
+			<label class="control-label">使用状态</label>
+			<select name="user_status">
+				<option value="-1" selected>请选择</option>
+				<foreach name="status_arr" item="vo">					
+<!-- 					<option value="{$key}">{$vo}</option> -->
+					<php>if($formget['user_status'] == $key){</php>
+					<option value="{$key}" selected="selected">{$vo}</option>
+					<php>}else{</php>
+					<option value="{$key}">{$vo}</option>
+					<php>}</php>					
+				</foreach>
+			</select>
+
+			<button class="btn btn-primary">搜索</button>
+		</form>
+		<form class="js-ajax-form" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+						<th width="100">ID</th>
+						<th>姓名</th>	
+						<th>登录账号</th>
+						<th width="120">所属区域</th>
+						<th width="120"><span>门店</span></th>
+						<th width="120"><span>店长</span></th>
+						<th width="120"><span>分店助理</span></th>
+						<th width="120"><span>业务员</span></th>
+						<th width="120"><span>状态</span></th>
+						<th width="120"><span>创建日期</span></th>
+						<th width="120">操作</th>
+					</tr>
+				</thead>
+				<foreach name="users_list" item="vo">
+				<tr>
+					<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
+					<td><a>{$vo.id}</a></td>
+					<td>{$vo.username}</td>
+					<td>{$vo.user_login}</td>
+					<td>{$vo.province}{$vo.city}{$vo.district}</td>
+					<td>{$vo.shop_id}</td>
+					<td>店长</td>
+					<td>分店助理</td>
+					<td>业务员</td>
+					<td>{$vo.user_status}</td>
+					<td>{$vo.create_time}</td>
+					<td>
+						<a href="{:U('Userrole/edit_region_manager',array('user_id'=>$vo['id']))}">编辑</a>|
+						<a href="{:U('Userrole/del_region_manager',array('user_id'=>$vo['id']))}" class="js-ajax-delete">删除</a>
+					</td>
+				</tr>
+				</foreach>
+				<tfoot>
+					<tr>
+						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+						<th width="100">ID</th>
+						<th>姓名</th>	
+						<th>登录账号</th>
+						<th width="120">所属区域</th>
+						<th width="120"><span>门店</span></th>
+						<th width="120"><span>店长</span></th>
+						<th width="120"><span>分店助理</span></th>
+						<th width="120"><span>业务员</span></th>
+						<th width="120"><span>状态</span></th>
+						<th width="120"><span>创建日期</span></th>
+						<th width="120">操作</th>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="pagination">{$Page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		setCookie('refersh_time', 0);
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location.reload();
+			}
+		}
+		setInterval(function() {
+			refersh_window()
+		}, 2000);
+	</script>
+	<script>
+		$('body').on('change', '#province', function(){
+			var option_val = $(this).val();
+			//console.log(option_val);
+			$.ajax({
+				type: "POST",
+				url: "{:U('Admin/Userrole/selectarea')}",
+				data: {pid:option_val},
+				dataType: "json",
+				success: function(data){
+					//console.log(data);
+					$('#city').empty(); $('#district').empty();   //清空resText里面的所有内容
+					var html = '';
+					//console.log(data);
+					html+='<option value="0">请选择</option>';
+					$.each(data,function(commentIndex, comment){
+						// console.log(commentIndex);
+						// console.log(comment);
+						var areas_id = commentIndex;
+						if(commentIndex)
+							html += '<option value="'+areas_id+'">' +comment+'</option>';
+					});
+					//console.log(html);
+					$('#city').html(html);
+
+					//清空区的下拉
+					var html = '';
+					html+='<option value="0">请选择</option>';	
+					$('#district').html(html);				
+				}
+			});
+		});
+		$('body').on('change', '#city', function(){
+			var option_val = $(this).val();
+			//console.log(option_val);
+
+			$.ajax({
+				type: "POST",
+				url: "{:U('Admin/Userrole/selectarea')}",
+				data: {pid:option_val},
+				dataType: "json",
+				success: function(data){
+					//console.log(data);
+
+					$('#district').empty();   //清空resText里面的所有内容
+					var html = '';
+
+					//console.log(data);
+					html+='<option value="0">请选择</option>';
+					$.each(data,function(commentIndex, comment){
+						var areas_id = commentIndex;
+						if(commentIndex)
+							html += '<option value="'+areas_id+'">' +comment+'</option>';
+					});
+					//console.log(html);
+					$('#district').html(html);
+				}
+			});
+		});
+
+	</script>	
+</body>
+</html>
