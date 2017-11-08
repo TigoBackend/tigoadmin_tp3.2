@@ -1,4 +1,5 @@
 <?php
+require_once('common.php');
 /**
  * 获取当前登录的管事员id
  * @return int
