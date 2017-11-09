@@ -34,8 +34,11 @@ class PublicController extends AdminbaseController {
     }
     
     public function logout(){
+        sp_write_log(C("MODULE_NAME.LOGIN"),C("ACTION_TYPE.ADD"),"退出登录");
     	session('ADMIN_ID',null); 
     	redirect(__ROOT__."/");
+        /*记录日志*/        
+
     }
     
     public function dologin(){
@@ -85,6 +88,8 @@ class PublicController extends AdminbaseController {
     				$result['last_login_ip']=get_client_ip(0,true);
     				$result['last_login_time']=date("Y-m-d H:i:s");
     				$user->save($result);
+                    /*记录日志*/
+                    sp_write_log(C("MODULE_NAME.LOGIN"),C("ACTION_TYPE.ADD"),"登录系统");                    
     				cookie("admin_username",$name,3600*24*30);
     				$this->success(L('LOGIN_SUCCESS'),U("Index/index"));
     			}else{
@@ -95,5 +100,4 @@ class PublicController extends AdminbaseController {
     		}
     	}
     }
-
 }

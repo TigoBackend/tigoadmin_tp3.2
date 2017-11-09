@@ -69,6 +69,7 @@ class UserController extends AdminbaseController{
 							}
 							$role_user_model->add(array("role_id"=>$role_id,"user_id"=>$result));
 						}
+						sp_write_log(C("MODULE_NAME.MANAGER"),C("ACTION_TYPE.ADD"),"添加后台管理用户，用户ID为：".$result);
 						$this->success("添加成功！", U("user/index"));
 					} else {
 						$this->error("添加失败！");
@@ -118,6 +119,7 @@ class UserController extends AdminbaseController{
 							}
 							$role_user_model->add(array("role_id"=>$role_id,"user_id"=>$uid));
 						}
+						sp_write_log(C("MODULE_NAME.MANAGER"),C("ACTION_TYPE.SAVE"),"修改后台用户信息，用户ID为：".$uid);
 						$this->success("保存成功！");
 					} else {
 						$this->error("保存失败！");
@@ -141,6 +143,7 @@ class UserController extends AdminbaseController{
 
 		if ($this->users_model->delete($id)!==false) {
 			M("RoleUser")->where(array("user_id"=>$id))->delete();
+			sp_write_log(C("MODULE_NAME.MANAGER"),C("ACTION_TYPE.DEL"),"删除后台管理用户，用户ID为：".$id);
 			$this->success("删除成功！");
 		} else {
 			$this->error("删除失败！");
@@ -180,6 +183,7 @@ class UserController extends AdminbaseController{
     	if (!empty($id)) {
     		$result = $this->users_model->where(array("id"=>$id,"user_type"=>1))->setField('user_status','0');
     		if ($result!==false) {
+    			sp_write_log(C("MODULE_NAME.MANAGER"),C("ACTION_TYPE.SAVE"),"拉黑后台管理用户，用户ID为：".$id);
     			$this->success("管理员停用成功！", U("user/index"));
     		} else {
     			$this->error('管理员停用失败！');
@@ -195,6 +199,7 @@ class UserController extends AdminbaseController{
     	if (!empty($id)) {
     		$result = $this->users_model->where(array("id"=>$id,"user_type"=>1))->setField('user_status','1');
     		if ($result!==false) {
+    			sp_write_log(C("MODULE_NAME.MANAGER"),C("ACTION_TYPE.SAVE"),"启用后台管理用户，用户ID为：".$id);
     			$this->success("管理员启用成功！", U("user/index"));
     		} else {
     			$this->error('管理员启用失败！');

@@ -96,6 +96,7 @@ class AdminPageController extends AdminbaseController {
 			$page['post_content']=htmlspecialchars_decode($page['post_content']);
 			$result=$this->posts_model->add($page);
 			if ($result) {
+				sp_write_log(C("MODULE_NAME.PAGE"),C("ACTION_TYPE.ADD"),"添加页面，页面ID为：".$result);
 				$this->success("添加成功！");
 			} else {
 				$this->error("添加失败！");
@@ -130,6 +131,7 @@ class AdminPageController extends AdminbaseController {
 			$page['post_content']=htmlspecialchars_decode($page['post_content']);
 			$result=$this->posts_model->save($page);
 			if ($result !== false) {
+				sp_write_log(C("MODULE_NAME.PAGE"),C("ACTION_TYPE.SAVE"),"编辑页面，页面ID为：".$page['id']);
 				$this->success("保存成功！");
 			} else {
 				$this->error("保存失败！");
@@ -142,9 +144,11 @@ class AdminPageController extends AdminbaseController {
 		if(isset($_POST['ids'])){
 			$ids = array_map("intval", $_POST['ids']);
 			$data=array("post_status"=>3);
-			if ($this->posts_model->where(array("id"=>array("in"=>$ids)))->save($data)) {
+			$where['id'] = array("in",$ids);
+			if ($this->posts_model->where($where)->save($data)) {
+				sp_write_log(C("MODULE_NAME.PAGE"),C("ACTION_TYPE.DEL"),"删除页面，页面ID为：".implode(',', $ids));
 				$this->success("删除成功！");
-			} else {
+			} else {				
 				$this->error("删除失败！");
 			}
 		}else{
@@ -152,6 +156,7 @@ class AdminPageController extends AdminbaseController {
 				$id = I("get.id",0,'intval');
 				$data=array("id"=>$id,"post_status"=>3);
 				if ($this->posts_model->save($data)) {
+					sp_write_log(C("MODULE_NAME.PAGE"),C("ACTION_TYPE.DEL"),"删除页面，页面ID为：".$id);
 					$this->success("删除成功！");
 				} else {
 					$this->error("删除失败！");
@@ -166,6 +171,7 @@ class AdminPageController extends AdminbaseController {
 			$id = I("get.id",0,'intval');
 			$data=array("id"=>$id,"post_status"=>"1");
 			if ($this->posts_model->save($data)) {
+				sp_write_log(C("MODULE_NAME.RECYCLE_PAGE"),C("ACTION_TYPE.SAVE"),"回收站中还原页面，页面ID为：".$id);
 				$this->success("还原成功！");
 			} else {
 				$this->error("还原失败！");
@@ -177,7 +183,9 @@ class AdminPageController extends AdminbaseController {
 	public function clean(){
 		if(isset($_POST['ids'])){
 			$ids = array_map("intval", $_POST['ids']);
-			if ($this->posts_model->where(array("id"=>array("in"=>$ids)))->delete()!==false) {
+			$where['id'] = array('in',$ids);
+			if ($this->posts_model->where($where)->delete()!==false) {
+				sp_write_log(C("MODULE_NAME.RECYCLE_PAGE"),C("ACTION_TYPE.DEL"),"回收站中删除页面，页面ID为：".implode(',', $ids));
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");
@@ -187,6 +195,7 @@ class AdminPageController extends AdminbaseController {
 		if(isset($_GET['id'])){
 			$id = I("get.id",0,'intval');
 			if ($this->posts_model->delete($id)!==false) {
+				sp_write_log(C("MODULE_NAME.RECYCLE_PAGE"),C("ACTION_TYPE.DEL"),"回收站中删除页面，页面ID为：".$id);
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");

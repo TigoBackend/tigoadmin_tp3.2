@@ -242,7 +242,8 @@ INSERT INTO `cmf_auth_rule` (`id`, `module`, `type`, `name`, `param`, `title`, `
 (170, 'Admin', 'admin_url', 'admin/menu/backup_menu', NULL, '备份菜单', 1, ''),
 (171, 'Admin', 'admin_url', 'admin/menu/export_menu_lang', NULL, '导出后台菜单多语言包', 1, ''),
 (172, 'Admin', 'admin_url', 'admin/menu/restore_menu', NULL, '还原菜单', 1, ''),
-(173, 'Admin', 'admin_url', 'admin/menu/getactions', NULL, '导入新菜单', 1, '');
+(173, 'Admin', 'admin_url', 'admin/menu/getactions', NULL, '导入新菜单', 1, ''),
+(174, 'Admin', 'admin_url', 'admin/log/index', NULL, '操作日志', 1, '');
 
 -- --------------------------------------------------------
 
@@ -519,7 +520,8 @@ INSERT INTO `cmf_menu` (`id`, `parentid`, `app`, `model`, `action`, `data`, `typ
 (174, 100, 'Admin', 'Menu', 'backup_menu', '', 1, 0, '备份菜单', '', '', 0),
 (175, 100, 'Admin', 'Menu', 'export_menu_lang', '', 1, 0, '导出后台菜单多语言包', '', '', 0),
 (176, 100, 'Admin', 'Menu', 'restore_menu', '', 1, 0, '还原菜单', '', '', 0),
-(177, 100, 'Admin', 'Menu', 'getactions', '', 1, 0, '导入新菜单', '', '', 0);
+(177, 100, 'Admin', 'Menu', 'getactions', '', 1, 0, '导入新菜单', '', '', 0),
+(178, 0, 'Admin', 'Log', 'index', '', 1, 1, '操作日志', '', '', 50);
 
 -- --------------------------------------------------------
 
@@ -829,6 +831,20 @@ CREATE TABLE IF NOT EXISTS `cmf_user_favorites` (
   `object_id` int(11) DEFAULT NULL COMMENT '收藏内容原来的主键id',
   `createtime` int(11) DEFAULT NULL COMMENT '收藏时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户收藏表';
+
+--
+-- 表的结构 `cmf_log` 操作日志表
+--
+CREATE TABLE IF NOT EXISTS `cmf_log` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL COMMENT '用户id',
+  `module_name` varchar(100) DEFAULT NULL COMMENT '模块名',
+  `action_type` tinyint(1) DEFAULT '0' COMMENT '操作类型：1.新增，2.修改，3.删除',
+  `describe` varchar(255) DEFAULT NULL COMMENT '操作描述',
+  `login_ip` varchar(50) DEFAULT NULL COMMENT '登录ip',
+  `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`log_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
 
 --
 -- Indexes for dumped tables

@@ -48,7 +48,9 @@ class SlideController extends AdminbaseController{
 	public function add_post(){
 		if(IS_POST){
 			if ($this->slide_model->create()!==false) {
-				if ($this->slide_model->add()!==false) {
+				$id = $this->slide_model->add();
+				if ($id) {
+					sp_write_log(C("MODULE_NAME.SLIDE"),C("ACTION_TYPE.ADD"),"添加幻灯片，幻灯片ID为：".$id);
 					$this->success("添加成功！", U("slide/index"));
 				} else {
 					$this->error("添加失败！");
@@ -72,8 +74,10 @@ class SlideController extends AdminbaseController{
 	// 幻灯片编辑提交
 	public function edit_post(){
 		if(IS_POST){
+			$slide_id = I("slide_id",0);
 			if ($this->slide_model->create()!==false) {
 				if ($this->slide_model->save()!==false) {
+					sp_write_log(C("MODULE_NAME.SLIDE"),C("ACTION_TYPE.SAVE"),"编辑幻灯片，幻灯片ID为：".$slide_id);
 					$this->success("保存成功！", U("slide/index"));
 				} else {
 					$this->error("保存失败！");
@@ -91,6 +95,7 @@ class SlideController extends AdminbaseController{
 			$ids = implode(",", $_POST['ids']);
 			$data['slide_status']=0;
 			if ($this->slide_model->where("slide_id in ($ids)")->delete()!==false) {
+				sp_write_log(C("MODULE_NAME.SLIDE"),C("ACTION_TYPE.DEL"),"删除幻灯片，幻灯片ID为：".$ids);
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");
@@ -98,6 +103,7 @@ class SlideController extends AdminbaseController{
 		}else{
 			$id = I("get.id",0,'intval');
 			if ($this->slide_model->delete($id)!==false) {
+				sp_write_log(C("MODULE_NAME.SLIDE"),C("ACTION_TYPE.DEL"),"删除幻灯片，幻灯片ID为：".$id);
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");

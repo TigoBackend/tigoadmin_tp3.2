@@ -40,7 +40,23 @@ function pw_encrypt($str){
 function maketoken(){
     return md5('www.tigonetwork.com'.time());
 }
-
+/*
+    将二维数组转成一维数组
+*/
+function arr2str($arr)
+{
+    foreach ($arr as $v)
+    {
+        $v = join(",",$v); //可以用implode将一维数组转换为用逗号连接的字符串
+        $temp[] = $v;
+    }
+    $t="";
+    foreach($temp as $v){
+        $t.="'".$v."'".",";
+    }
+    $t=substr($t,0,-1);
+    return $t;
+}
 /**
  * 获取二维数组中的某一列
  * @param type $arr 数组

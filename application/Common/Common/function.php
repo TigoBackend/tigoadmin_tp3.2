@@ -2163,3 +2163,17 @@ function sp_mobile_code_log($mobile,$code,$expire_time){
     
     return $result;
 }
+/*写操作记录*/
+function sp_write_log($module_name, $action_type, $describe)
+{
+	$log_model = D("Common/log");
+	$log['user_id'] = sp_get_current_admin_id();
+	$log['module_name'] = $module_name;
+	$log['action_type'] = $action_type;
+	$log['describe'] = $describe;
+	$log['login_ip'] = getIP();
+
+	if ($log_model->create($log)) {
+		$log_model->add();
+	}
+}

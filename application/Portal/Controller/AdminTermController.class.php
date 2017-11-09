@@ -79,8 +79,10 @@ class AdminTermController extends AdminbaseController {
 	public function add_post(){
 		if (IS_POST) {
 			if ($this->terms_model->create()!==false) {
-				if ($this->terms_model->add()!==false) {
+				$id = $this->terms_model->add();
+				if ($id) {
 				    F('all_terms',null);
+				    sp_write_log(C("MODULE_NAME.CLASSIFY"),C("ACTION_TYPE.ADD"),"添加文章分类，分类ID为：".$id);
 					$this->success("添加成功！",U("AdminTerm/index"));
 				} else {
 					$this->error("添加失败！");
@@ -120,9 +122,11 @@ class AdminTermController extends AdminbaseController {
 	// 文章分类编辑提交
 	public function edit_post(){
 		if (IS_POST) {
+			$id = I('term_id',0);
 			if ($this->terms_model->create()!==false) {
 				if ($this->terms_model->save()!==false) {
 				    F('all_terms',null);
+				    sp_write_log(C("MODULE_NAME.CLASSIFY"),C("ACTION_TYPE.SAVE"),"修改文章分类，分类ID为：".$id);
 					$this->success("修改成功！");
 				} else {
 					$this->error("修改失败！");
@@ -153,6 +157,7 @@ class AdminTermController extends AdminbaseController {
 		}
 		
 		if ($this->terms_model->delete($id)!==false) {
+			sp_write_log(C("MODULE_NAME.CLASSIFY"),C("ACTION_TYPE.DEL"),"删除文章分类，分类ID为：".$id);
 			$this->success("删除成功！");
 		} else {
 			$this->error("删除失败！");

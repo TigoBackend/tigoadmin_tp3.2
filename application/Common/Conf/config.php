@@ -96,4 +96,31 @@ $configs= array(
         )
 );
 
-return  array_merge($configs,$db,$runtime_config);
+
+$logconfig= array(
+    /*
+        日志操作类型
+        写日志函数：sp_write_log(C("MODULE_NAME.LOGIN"),C("ACTION_TYPE.ADD"),"退出登录");
+    */
+    "ACTION_TYPE" => array(
+        "UNKNOWN" => 0,
+        "ADD" => 1,
+        "SAVE" => 2,
+        "DEL" => 3,
+    ),
+    "MODULE_NAME" => array(
+        "LOGIN" => "登录",
+        "ROLE" => "角色管理",
+        "MANAGER" => "管理员",
+        "ARTICLE" => "文章管理",
+        "CLASSIFY" => "分类管理",
+        "RECYCLE_PAGE" => "回收站->页面回收",
+        "RECYCLE_ARTICLE" => "回收站->文章回收",        
+        "PAGE" => "页面管理",
+        "SLIDE" => "幻灯片管理",
+        "SLIDE_CLASSIFY" => "幻灯片分类",
+        "AD" => "网站广告",
+        "LINK" => "友情链接",
+    )
+);
+return  array_merge($configs,$db,$runtime_config,$logconfig);

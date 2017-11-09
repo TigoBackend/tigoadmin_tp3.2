@@ -65,7 +65,7 @@ class AdminPostController extends AdminbaseController {
 				foreach ($_POST['term'] as $mterm_id){
 					$this->term_relationships_model->add(array("term_id"=>intval($mterm_id),"object_id"=>$result));
 				}
-				
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.ADD"),"添加一篇文章，文章ID为：".$result);
 				$this->success("添加成功！");
 			} else {
 				$this->error("添加失败！");
@@ -121,6 +121,7 @@ class AdminPostController extends AdminbaseController {
 			$article['post_content']=htmlspecialchars_decode($article['post_content']);
 			$result=$this->posts_model->save($article);
 			if ($result!==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"修改文章内容，文章ID为：".$post_id);
 				$this->success("保存成功！");
 			} else {
 				$this->error("保存失败！");
@@ -257,6 +258,7 @@ class AdminPostController extends AdminbaseController {
 		if(isset($_GET['id'])){
 			$id = I("get.id",0,'intval');
 			if ($this->posts_model->where(array('id'=>$id))->save(array('post_status'=>3)) !==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.DEL"),"删除文章，文章ID为：".$id);
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");
@@ -264,9 +266,9 @@ class AdminPostController extends AdminbaseController {
 		}
 		
 		if(isset($_POST['ids'])){
-			$ids = I('post.ids/a');
-			
+			$ids = I('post.ids/a');			
 			if ($this->posts_model->where(array('id'=>array('in',$ids)))->save(array('post_status'=>3))!==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.DEL"),"批量删除文章，文章ID为：".implode(",",$ids));
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");
@@ -277,18 +279,18 @@ class AdminPostController extends AdminbaseController {
 	// 文章审核
 	public function check(){
 		if(isset($_POST['ids']) && $_GET["check"]){
-		    $ids = I('post.ids/a');
-			
+		    $ids = I('post.ids/a');			
 			if ( $this->posts_model->where(array('id'=>array('in',$ids)))->save(array('post_status'=>1)) !== false ) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"审核文章，文章ID为：".implode(",",$ids));
 				$this->success("审核成功！");
 			} else {
 				$this->error("审核失败！");
 			}
 		}
 		if(isset($_POST['ids']) && $_GET["uncheck"]){
-		    $ids = I('post.ids/a');
-		    
+		    $ids = I('post.ids/a');		    
 			if ( $this->posts_model->where(array('id'=>array('in',$ids)))->save(array('post_status'=>0)) !== false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"取消审核文章，文章ID为：".implode(",",$ids));
 				$this->success("取消审核成功！");
 			} else {
 				$this->error("取消审核失败！");
@@ -302,6 +304,7 @@ class AdminPostController extends AdminbaseController {
 			$ids = I('post.ids/a');
 			
 			if ( $this->posts_model->where(array('id'=>array('in',$ids)))->save(array('istop'=>1))!==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"置顶文章，文章ID为：".implode(",",$ids));
 				$this->success("置顶成功！");
 			} else {
 				$this->error("置顶失败！");
@@ -311,6 +314,7 @@ class AdminPostController extends AdminbaseController {
 		    $ids = I('post.ids/a');
 		    
 			if ( $this->posts_model->where(array('id'=>array('in',$ids)))->save(array('istop'=>0))!==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"取消文章置顶，文章ID为：".implode(",",$ids));
 				$this->success("取消置顶成功！");
 			} else {
 				$this->error("取消置顶失败！");
@@ -324,6 +328,7 @@ class AdminPostController extends AdminbaseController {
 			$ids = I('post.ids/a');
 			
 			if ( $this->posts_model->where(array('id'=>array('in',$ids)))->save(array('recommended'=>1))!==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"推荐文章，文章ID为：".implode(",",$ids));
 				$this->success("推荐成功！");
 			} else {
 				$this->error("推荐失败！");
@@ -333,6 +338,7 @@ class AdminPostController extends AdminbaseController {
 		    $ids = I('post.ids/a');
 		    
 			if ( $this->posts_model->where(array('id'=>array('in',$ids)))->save(array('recommended'=>0))!==false) {
+				sp_write_log(C("MODULE_NAME.ARTICLE"),C("ACTION_TYPE.SAVE"),"取消推荐文章，文章ID为：".implode(",",$ids));
 				$this->success("取消推荐成功！");
 			} else {
 				$this->error("取消推荐失败！");
@@ -452,6 +458,7 @@ class AdminPostController extends AdminbaseController {
 			$this->term_relationships_model->where(array('object_id'=>array('in',$ids)))->delete();
 			
 			if ($status!==false) {
+				sp_write_log(C("MODULE_NAME.RECYCLE_ARTICLE"),C("ACTION_TYPE.DEL"),"回收站中删除文章，文章ID为：".implode(",",$ids));
 				$this->success("删除成功！");
 			} else {
 				$this->error("删除失败！");
@@ -463,6 +470,7 @@ class AdminPostController extends AdminbaseController {
 				$this->term_relationships_model->where(array('object_id'=>$id))->delete();
 				
 				if ($status!==false) {
+					sp_write_log(C("MODULE_NAME.RECYCLE_ARTICLE"),C("ACTION_TYPE.DEL"),"回收站中删除文章，文章ID为：".$id);
 					$this->success("删除成功！");
 				} else {
 					$this->error("删除失败！");
@@ -476,6 +484,7 @@ class AdminPostController extends AdminbaseController {
 		if(isset($_GET['id'])){
 			$id = I("get.id",0,'intval');
 			if ($this->posts_model->where(array("id"=>$id,'post_status'=>3))->save(array("post_status"=>"1"))) {
+				sp_write_log(C("MODULE_NAME.RECYCLE_ARTICLE"),C("ACTION_TYPE.SAVE"),"回收站中还原文章，文章ID为：".$id);
 				$this->success("还原成功！");
 			} else {
 				$this->error("还原失败！");

@@ -28,7 +28,9 @@ class RbacController extends AdminbaseController {
     public function roleadd_post() {
     	if (IS_POST) {
     		if ($this->role_model->create()!==false) {
-    			if ($this->role_model->add()!==false) {
+                $id = $this->role_model->add();
+    			if ($id) {
+                    sp_write_log(C("MODULE_NAME.ROLE"),C("ACTION_TYPE.ADD"),"创建角色，角色ID为：".$id);
     				$this->success("添加角色成功",U("rbac/index"));
     			} else {
     				$this->error("添加失败！");
@@ -52,6 +54,7 @@ class RbacController extends AdminbaseController {
         }else{
         	$status = $this->role_model->delete($id);
         	if ($status!==false) {
+                sp_write_log(C("MODULE_NAME.ROLE"),C("ACTION_TYPE.DEL"),"删除角色，角色ID为：".$id);
         		$this->success("删除成功！", U('Rbac/index'));
         	} else {
         		$this->error("删除失败！");
@@ -83,6 +86,7 @@ class RbacController extends AdminbaseController {
     	if (IS_POST) {
     		if ($this->role_model->create()!==false) {
     			if ($this->role_model->save()!==false) {
+                    sp_write_log(C("MODULE_NAME.ROLE"),C("ACTION_TYPE.SAVE"),"修改角色信息，角色ID为：".$id);
     				$this->success("修改成功！", U('Rbac/index'));
     			} else {
     				$this->error("修改失败！");
@@ -152,11 +156,12 @@ class RbacController extends AdminbaseController {
     					$this->auth_access_model->add(array("role_id"=>$roleid,"rule_name"=>$name,'type'=>'admin_url'));
     				}
     			}
-    
+                sp_write_log(C("MODULE_NAME.ROLE"),C("ACTION_TYPE.SAVE"),"修改角色权限，角色ID为：".$roleid);
     			$this->success("授权成功！", U("Rbac/index"));
     		}else{
     			//当没有数据时，清除当前角色授权
     			$this->auth_access_model->where(array("role_id" => $roleid))->delete();
+                sp_write_log(C("MODULE_NAME.ROLE"),C("ACTION_TYPE.SAVE"),"清除角色权限，角色ID为：".$roleid);
     			$this->error("没有接收到数据，执行清除授权成功！");
     		}
     	}
